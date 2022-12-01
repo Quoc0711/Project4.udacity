@@ -1,6 +1,9 @@
 import * as AWS from 'aws-sdk'
 import { DocumentClient } from 'aws-sdk/clients/dynamodb'
+import * as AWSXRay from 'aws-xray-sdk'
 
+
+const XAWS = AWSXRay.captureAWS(AWS)
 
 export class AttachmentUtils {
     constructor(
@@ -8,7 +11,7 @@ export class AttachmentUtils {
         private readonly todoTable = process.env.TODOS_TABLE,
         private readonly bucketName = process.env.ATTACHMENT_S3_BUCKET,
         private readonly urlExpiration = process.env.SIGNED_URL_EXPIRATION,
-        private readonly s3 = new AWS.S3({
+        private readonly s3 = new XAWS.S3({
             signatureVersion: 'v4'
         })
     ) { }
