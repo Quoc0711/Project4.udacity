@@ -3,9 +3,12 @@ import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda'
 import * as middy from 'middy'
 import { cors, httpErrorHandler } from 'middy/middlewares'
 import { deleteToDo } from '../../businessLogic/todos'
+import { createLogger } from '../../utils/logger'
 
+const logger = createLogger('deleteToDo');
 export const handler = middy(
   async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
+    logger.info('Handling deleteToDo event', {event});
     const deleteToitem = await deleteToDo(event);
 
     return {

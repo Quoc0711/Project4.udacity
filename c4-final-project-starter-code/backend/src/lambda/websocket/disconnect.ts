@@ -1,13 +1,18 @@
 import { APIGatewayProxyHandler, APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda'
 import 'source-map-support/register'
 import * as AWS  from 'aws-sdk'
+import { createLogger } from '../../utils/logger'
 
-const docClient = new AWS.DynamoDB.DocumentClient()
+const logger = createLogger('disconnect');
+const AWSXRay = require('aws-xray-sdk')
+const XAWS = AWSXRay.captureAWS(AWS)
+
+const docClient = new XAWS.DynamoDB.DocumentClient()
 
 const connectionsTable = process.env.CONNECTIONS_TABLE
 
 export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
-  console.log('Websocket disconnect', event)
+  logger.info('Websocket disconnect', event)
 
   const connectionId = event.requestContext.connectionId
   const key = {
@@ -15,7 +20,7 @@ export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEven
       id: connectionId
   }
 
-  console.log('Removing item with key: ', key)
+  logger.info('Removing item with key: ', key)
 
   await docClient.delete({
     TableName: connectionsTable,
