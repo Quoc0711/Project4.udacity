@@ -57,10 +57,12 @@ export default class App extends Component<AppProps, AppState> {
     return (
       <Menu>
         <Menu.Item name="home">
-          <Link to="/">Home</Link>
+        <Link to="/"><img src="https://img.icons8.com/fluency/48/000000/bulleted-list.png" /> </Link>
         </Menu.Item>
 
-        <Menu.Menu position="right">{this.logInLogOutButton()}</Menu.Menu>
+        <Menu.Menu position="right">          
+          {this.logInLogOutButton()}
+        </Menu.Menu>
       </Menu>
     )
   }
@@ -68,13 +70,13 @@ export default class App extends Component<AppProps, AppState> {
   logInLogOutButton() {
     if (this.props.auth.isAuthenticated()) {
       return (
-        <Menu.Item name="logout" onClick={this.handleLogout}>
+        <Menu.Item name="logout"  onClick={this.handleLogout}>
           Log Out
         </Menu.Item>
       )
     } else {
       return (
-        <Menu.Item name="login" onClick={this.handleLogin}>
+        <Menu.Item name="login"  onClick={this.handleLogin}>
           Log In
         </Menu.Item>
       )
