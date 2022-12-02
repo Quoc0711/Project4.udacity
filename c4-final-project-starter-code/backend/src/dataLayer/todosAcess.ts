@@ -2,10 +2,13 @@ import * as AWS from 'aws-sdk'
 import { TodoItem } from '../models/TodoItem'
 import { TodoUpdate } from '../models/TodoUpdate';
 
+const AWSXRay = require('aws-xray-sdk')
+const XAWS = AWSXRay.captureAWS(AWS)
+
 export class TodosAccess {
 
     constructor(
-        private readonly dynamoDBClient = new AWS.DynamoDB.DocumentClient(),
+        private readonly dynamoDBClient = new XAWS.DynamoDB.DocumentClient(),
         private readonly todosTable = process.env.TODOS_TABLE,
         private readonly todosIndex = process.env.TODOS_CREATED_AT_INDEX,
     ) {
