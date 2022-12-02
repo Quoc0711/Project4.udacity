@@ -1,6 +1,6 @@
 import { SNSHandler, SNSEvent, S3Event } from 'aws-lambda'
 import 'source-map-support/register'
-import * as AWS from 'aws-sdk'
+import * as AWS  from 'aws-sdk'
 
 const docClient = new AWS.DynamoDB.DocumentClient()
 
@@ -16,11 +16,12 @@ const connectionParams = {
 const apiGateway = new AWS.ApiGatewayManagementApi(connectionParams)
 
 export const handler: SNSHandler = async (event: SNSEvent) => {
-  console.log('Processing SNS event: ', JSON.stringify(event))
+  console.log('Processing SNS event ', JSON.stringify(event))
   for (const snsRecord of event.Records) {
     const s3EventStr = snsRecord.Sns.Message
     console.log('Processing S3 event', s3EventStr)
     const s3Event = JSON.parse(s3EventStr)
+
     await processS3Event(s3Event)
   }
 }
@@ -31,19 +32,20 @@ async function processS3Event(s3Event: S3Event) {
     console.log('Processing S3 item with key: ', key)
 
     const connections = await docClient.query({
-      TableName: connectionsTable,
-      KeyConditionExpression: 'isConnect = :isConnect',
-      ExpressionAttributeValues: {
-        ':isConnect': 'true'
-      }
+        TableName: connectionsTable,
+        KeyConditionExpression: 'isConnect = :isConnect',
+        ExpressionAttributeValues: {
+            ':isConnect': 'true'
+        }
     }).promise()
 
     const payload = {
-      imageId: key
+        imageId: key
     }
+
     for (const connection of connections.Items) {
-      const connectionId = connection.id
-      await sendMessageToClient(connectionId, payload)
+        const connectionId = connection.id
+        await sendMessageToClient(connectionId, payload)
     }
   }
 }
@@ -51,6 +53,7 @@ async function processS3Event(s3Event: S3Event) {
 async function sendMessageToClient(connectionId, payload) {
   try {
     console.log('Sending message to a connection', connectionId)
+
     await apiGateway.postToConnection({
       ConnectionId: connectionId,
       Data: JSON.stringify(payload),
@@ -67,6 +70,7 @@ async function sendMessageToClient(connectionId, payload) {
           id: connectionId
         }
       }).promise()
+
     }
   }
 }

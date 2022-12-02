@@ -14,7 +14,9 @@ export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEven
       isConnect: 'true',
       id: connectionId
   }
+
   console.log('Removing item with key: ', key)
+
   await docClient.delete({
     TableName: connectionsTable,
     Key: key

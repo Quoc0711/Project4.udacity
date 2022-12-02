@@ -1,6 +1,6 @@
 import { APIGatewayProxyHandler, APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda'
 import 'source-map-support/register'
-import * as AWS from 'aws-sdk'
+import * as AWS  from 'aws-sdk'
 
 const docClient = new AWS.DynamoDB.DocumentClient()
 
@@ -17,7 +17,9 @@ export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEven
     id: connectionId,
     timestamp
   }
+
   console.log('Storing item: ', item)
+
   await docClient.put({
     TableName: connectionsTable,
     Item: item
