@@ -1,13 +1,13 @@
 import * as AWS from 'aws-sdk'
 import { DocumentClient } from 'aws-sdk/clients/dynamodb'
-import * as AWSXRay from 'aws-xray-sdk'
 
 
+const AWSXRay = require('aws-xray-sdk')
 const XAWS = AWSXRay.captureAWS(AWS)
 
 export class AttachmentUtils {
     constructor(
-        private readonly docClient: DocumentClient = new AWS.DynamoDB.DocumentClient(),
+        private readonly docClient: DocumentClient = new XAWS.DynamoDB.DocumentClient(),
         private readonly todoTable = process.env.TODOS_TABLE,
         private readonly bucketName = process.env.ATTACHMENT_S3_BUCKET,
         private readonly urlExpiration = process.env.SIGNED_URL_EXPIRATION,
